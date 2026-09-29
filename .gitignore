@@ -1,0 +1,4 @@
+build/*
+!build/lifelink.uf2
+tests/build/
+build.txt

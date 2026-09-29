@@ -1,0 +1,69 @@
+========================================
+ LIFELINK WIRING  —  plug and go
+========================================
+ Everything runs at 3.3 V.  Never use VBUS / 5 V (Pico pin 40).
+
+ Boards:
+   MAX30102  heart rate / SpO2   (purple board)
+   MAX30205  body temperature
+   HM-10     BLE  (AITIAO / AT-09, CC2541)
+
+
+STEP 1 — POWER RAILS  (do this first)
+----------------------------------------
+   Pico pin 36 (3V3) ->  + rail   (red)
+   Pico pin 38 (GND) ->  - rail   (blue)
+
+   Then every board's VCC -> + rail, every GND -> - rail.
+
+
+STEP 2 — MAX30102   heart rate / SpO2
+----------------------------------------
+   VIN  ->  + rail
+   GND  ->  - rail
+   SDA  ->  Pico pin 6   (GP4)
+   SCL  ->  Pico pin 7   (GP5)
+   INT  ->  Pico pin 4   (GP2)
+   RD, IRD  ->  leave empty
+
+
+STEP 3 — MAX30205   body temperature
+----------------------------------------
+   VIN  ->  + rail
+   GND  ->  - rail
+   SDA  ->  Pico pin 9   (GP6)
+   SCL  ->  Pico pin 10  (GP7)
+   OS   ->  Pico pin 5   (GP3)     [optional — skip if no OS pin]
+   A0, A1, A2  ->  - rail          [only if your board has them]
+
+
+STEP 4 — HM-10   BLE module
+----------------------------------------
+   VCC  ->  + rail          (connect this LAST)
+   GND  ->  - rail
+   TXD  ->  Pico pin 2   (GP1)     <- cross over!
+   RXD  ->  Pico pin 1   (GP0)     <- cross over!
+   STATE, EN, BRK  ->  leave empty
+
+   !! TX goes to RX, RX goes to TX.  Do NOT wire TXD->TX.
+
+
+RESISTORS
+----------------------------------------
+   None.  All three boards have their own I2C pull-ups.
+   Only if a sensor never responds: add 4.7k from its
+   SDA -> + rail and its SCL -> + rail.
+
+
+BLE PIN
+----------------------------------------
+   Set your own PIN when you build:
+       cmake -DHM10_PAIR_PIN=481920 ..
+   Phone enters this PIN the first time it connects.
+
+
+========================================
+ Pico reference pins used
+   1=GP0  2=GP1  4=GP2  5=GP3  6=GP4
+   7=GP5  9=GP6  10=GP7  36=3V3  38=GND
+========================================
